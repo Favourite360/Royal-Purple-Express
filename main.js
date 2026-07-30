@@ -20,11 +20,17 @@
 
   /* Mobile nav */
   var toggle = doc.querySelector('.menu-toggle');
+  /* The drawer is padded down by the header's real height so its first item never
+     sits under the bar. The header shrinks once .scrolled applies, so keep this
+     measurement fresh on load, on scroll and on resize — not just on open. */
   function syncHeaderHeight() {
     if (header) doc.documentElement.style.setProperty('--header-h', Math.ceil(header.getBoundingClientRect().height) + 'px');
   }
+  syncHeaderHeight();
+  window.addEventListener('load', syncHeaderHeight);
+  window.addEventListener('resize', syncHeaderHeight);
+  window.addEventListener('scroll', syncHeaderHeight, { passive: true });
   if (toggle) toggle.addEventListener('click', function () { syncHeaderHeight(); body.classList.toggle('nav-open'); });
-  window.addEventListener('resize', function () { if (body.classList.contains('nav-open')) syncHeaderHeight(); });
   doc.querySelectorAll('.nav-links a:not(.nav-trigger)').forEach(function (a) {
     a.addEventListener('click', function () { body.classList.remove('nav-open'); doc.querySelectorAll('.has-mega.open').forEach(function (o) { o.classList.remove('open'); }); });
   });

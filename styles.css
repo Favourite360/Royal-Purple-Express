@@ -493,29 +493,67 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
   .logo-mark{width:40px;height:33px}
   .logo-text b{font-size:.84rem}
   .logo-text small{font-size:.48rem;letter-spacing:.2em}
-  .menu-toggle{display:grid}
+  .menu-toggle{display:grid;position:relative;z-index:2}
   .site-header:not(.scrolled) .on-hero .menu-toggle{color:#fff;border-color:rgba(255,255,255,.45)}
-  .mega-label{color:#9a8bb8;border-color:rgba(255,255,255,.15)}
-  /* Header must stay opaque and above the nav drawer while it's open, otherwise
-     the hero content behind it bleeds through the transparent header area. */
-  body.nav-open .site-header{background:var(--ink);box-shadow:none}
+
+  /* ---- Mobile drawer ----------------------------------------------------
+     CRITICAL: .site-header.scrolled applies backdrop-filter, and a filtered
+     ancestor becomes the containing block for position:fixed descendants.
+     That made the drawer resolve inset/width against the HEADER box instead
+     of the viewport — the panel shrank, submenus spilled outside it, and the
+     toggle got clipped once the page was scrolled. Both filters must be off
+     while the drawer is open, and the drawer sits BELOW the header (z-index
+     99 < 100) so the close button stays visible and tappable on top of it. */
+  body.nav-open .site-header{
+    background:var(--ink);box-shadow:none;
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+  }
+  body.nav-open .menu-toggle{color:#fff;border-color:rgba(255,255,255,.45)}
+
   .nav-links{
-    position:fixed;inset:0;top:0;background:var(--ink);flex-direction:column;justify-content:flex-start;gap:6px;
-    transform:translateX(100%);transition:transform .45s var(--ease);z-index:101;padding:24px 28px 40px;
-    padding-top:calc(var(--header-h,84px) + 20px);
-    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    position:fixed;top:0;left:0;
+    width:100vw;height:100vh;height:100dvh;
+    background:var(--ink);
+    flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;
+    padding:calc(var(--header-h,76px) + 12px) 20px 48px;
+    transform:translateX(100%);transition:transform .45s var(--ease);
+    z-index:99;
+    overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   }
   body.nav-open .nav-links{transform:none;display:flex}
   body.nav-open{overflow:hidden}
-  .nav-links a,.nav-trigger{color:#fff!important;font-size:1.3rem;font-family:var(--display);font-weight:700}
-  .nav-links > li{flex:none;border-bottom:1px solid rgba(255,255,255,.1);padding-block:2px}
+
+  .nav-links > li{flex:none;border-bottom:1px solid rgba(255,255,255,.1)}
   .nav-links > li:last-child{border-bottom:none}
-  .mega{position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;background:transparent;border:none;display:none;width:auto;padding:4px 0 16px}
-  .mega--ind{grid-template-columns:1fr;width:auto}
+  /* Top-level rows: full width, text dead-centre */
+  .nav-links > li > a,.nav-trigger{
+    display:flex;justify-content:center;align-items:center;gap:.45em;
+    width:100%;text-align:center;padding:17px 10px;border-radius:0;
+    color:#fff!important;font-family:var(--display);font-weight:700;font-size:1.22rem;
+  }
+
+  /* Submenus: stack full-width inside the drawer, centred, never offset */
+  .mega,.mega--ind,.mega--sm{
+    position:static;transform:none;opacity:1;visibility:visible;
+    display:none;width:100%;max-width:none;grid-template-columns:1fr;gap:0;
+    background:rgba(255,255,255,.045);border:none;border-radius:12px;
+    box-shadow:none;padding:6px 0 10px;margin:0 0 14px;
+  }
   .has-mega.open .mega{display:block}
-  .nav-trigger{justify-content:center}
-  .mega a{justify-content:center;text-align:center}
-  .mega b,.mega small{color:#fff!important}
+  .mega a{
+    display:block;width:100%;text-align:center;justify-content:center;
+    padding:12px 10px;border-radius:0;
+  }
+  .mega a:hover{background:rgba(255,255,255,.07)}
+  .mega .m-ic{display:none}          /* icons pushed labels off-centre */
+  .mega b{display:block;text-align:center;color:#fff!important;font-family:var(--body);font-weight:500;font-size:1rem!important}
+  .mega small{display:block;text-align:center;color:#c9bcd8!important}
+  .mega-label{
+    display:block;text-align:center;color:#9a8bb8;
+    border:none;margin:6px 0 0;padding:10px 0 4px;
+  }
+  .mega-label:not(:first-child){border-top:1px solid rgba(255,255,255,.12);margin-top:8px;padding-top:14px}
+  .mega-all{border-top:1px solid rgba(255,255,255,.12);margin-top:6px;padding-top:10px}
   .split,.reach,.form-wrap{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr 1fr;gap:34px}
   .steps,.steps.steps--3{grid-template-columns:1fr 1fr}
