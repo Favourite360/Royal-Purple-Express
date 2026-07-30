@@ -451,7 +451,7 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
 .ca-item b{display:block;color:#fff;margin-bottom:3px}
 .ca-item span{color:#b3a4cf;font-size:.92rem}
 .form-note{font-size:.82rem;color:var(--ink-soft);margin-top:6px}
-.success-msg{display:none;background:rgba(142,76,152,.1);border:1px solid rgba(142,76,152,.3);color:var(--royal);padding:16px 18px;border-radius:12px;margin-bottom:20px;font-weight:600}
+.success-msg{display:none;background:rgba(142,76,152,.1);border:1px solid rgba(142,76,152,.3);color:var(--royal);padding:16px 18px;border-radius:12px;margin-top:20px;font-weight:600}
 .success-msg.show{display:block}
 
 /* ---------- Value cards (about/services) ---------- */
@@ -464,8 +464,8 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
 .card p{color:var(--ink-soft);font-size:.95rem}
 
 /* process steps */
-.steps--3{grid-template-columns:repeat(3,1fr)}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:step}
+.steps.steps--3{grid-template-columns:repeat(3,1fr)}
 .step{position:relative;padding-top:30px}
 .step::before{counter-increment:step;content:"0" counter(step);font-family:var(--mono);font-size:.8rem;color:var(--violet);position:absolute;top:0;left:0;letter-spacing:.1em}
 .step::after{content:"";position:absolute;top:6px;left:34px;right:-10px;height:1px;background:var(--line)}
@@ -496,14 +496,21 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
   .menu-toggle{display:grid}
   .site-header:not(.scrolled) .on-hero .menu-toggle{color:#fff;border-color:rgba(255,255,255,.45)}
   .mega-label{color:#9a8bb8;border-color:rgba(255,255,255,.15)}
+  /* Header must stay opaque and above the nav drawer while it's open, otherwise
+     the hero content behind it bleeds through the transparent header area. */
+  body.nav-open .site-header{background:var(--ink);box-shadow:none}
   .nav-links{
-    position:fixed;inset:0;top:0;background:var(--ink);flex-direction:column;justify-content:center;gap:8px;
-    transform:translateX(100%);transition:transform .45s var(--ease);z-index:99;padding:30px;
+    position:fixed;inset:0;top:0;background:var(--ink);flex-direction:column;justify-content:flex-start;gap:6px;
+    transform:translateX(100%);transition:transform .45s var(--ease);z-index:101;padding:24px 28px 40px;
+    padding-top:calc(var(--header-h,84px) + 20px);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
   }
   body.nav-open .nav-links{transform:none;display:flex}
   body.nav-open{overflow:hidden}
-  .nav-links a,.nav-trigger{color:#fff!important;font-size:1.4rem;font-family:var(--display);font-weight:700}
-  .mega{position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;background:transparent;border:none;display:none;width:auto;padding:8px 0}
+  .nav-links a,.nav-trigger{color:#fff!important;font-size:1.3rem;font-family:var(--display);font-weight:700}
+  .nav-links > li{flex:none;border-bottom:1px solid rgba(255,255,255,.1);padding-block:2px}
+  .nav-links > li:last-child{border-bottom:none}
+  .mega{position:static;transform:none;opacity:1;visibility:visible;box-shadow:none;background:transparent;border:none;display:none;width:auto;padding:4px 0 16px}
   .mega--ind{grid-template-columns:1fr;width:auto}
   .has-mega.open .mega{display:block}
   .nav-trigger{justify-content:center}
@@ -511,7 +518,7 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
   .mega b,.mega small{color:#fff!important}
   .split,.reach,.form-wrap{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr 1fr;gap:34px}
-  .steps{grid-template-columns:1fr 1fr}
+  .steps,.steps.steps--3{grid-template-columns:1fr 1fr}
   .step::after{display:none}
   .footer-grid{grid-template-columns:1fr 1fr}
   .form-row{grid-template-columns:1fr}
@@ -714,6 +721,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* Uber-style connect form */
 .connect-form{max-width:720px;margin-inline:auto}
+.connect-form + .success-msg{max-width:720px;margin:20px auto 0}
 .radio-row{display:flex;gap:26px;padding-top:4px}
 .radio{display:flex;align-items:center;gap:9px;font-weight:500;font-family:var(--body);text-transform:none;letter-spacing:0;font-size:1rem;color:var(--ink);cursor:pointer}
 .radio input{accent-color:var(--violet);width:18px;height:18px;margin:0}

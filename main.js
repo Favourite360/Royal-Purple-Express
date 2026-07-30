@@ -20,7 +20,11 @@
 
   /* Mobile nav */
   var toggle = doc.querySelector('.menu-toggle');
-  if (toggle) toggle.addEventListener('click', function () { body.classList.toggle('nav-open'); });
+  function syncHeaderHeight() {
+    if (header) doc.documentElement.style.setProperty('--header-h', Math.ceil(header.getBoundingClientRect().height) + 'px');
+  }
+  if (toggle) toggle.addEventListener('click', function () { syncHeaderHeight(); body.classList.toggle('nav-open'); });
+  window.addEventListener('resize', function () { if (body.classList.contains('nav-open')) syncHeaderHeight(); });
   doc.querySelectorAll('.nav-links a:not(.nav-trigger)').forEach(function (a) {
     a.addEventListener('click', function () { body.classList.remove('nav-open'); doc.querySelectorAll('.has-mega.open').forEach(function (o) { o.classList.remove('open'); }); });
   });
@@ -149,11 +153,13 @@
           if (!msg) {
             msg = doc.createElement('div');
             msg.className = 'success-msg';
-            form.parentNode.insertBefore(msg, form);
+            // Placed right after the form (i.e. beneath the submit button) so the
+            // confirmation appears exactly where the user is already looking.
+            form.parentNode.insertBefore(msg, form.nextSibling);
           }
           msg.textContent = 'Thank you. Your message has been sent. A coordinator will reach out within one business day.';
           msg.classList.add('show');
-          msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           form.reset();
           if (btn) { btn.disabled = false; btn.innerHTML = orig; }
         }).catch(function () {
@@ -176,7 +182,6 @@
         '</div>' +
         '<div class="expert-body">' +
           '<p class="lead">Tell us what you are shipping and a specialist will get back to you within one business day.</p>' +
-          '<div class="success-msg expert-success">Thank you. Your request is in. A specialist will reach out within one business day.</div>' +
           '<form data-expert-form action="https://formsubmit.co/29fe097d612957315b51cd9de2924a47" method="POST">' +
             '<input type="hidden" name="_subject" value="Talk to an expert — royalpurpleexpress.com">' +
             '<input type="hidden" name="_next" value="https://royalpurpleexpress.com/thanks.html">' +
@@ -193,6 +198,7 @@
             '<div class="field"><label>Message</label><textarea name="message" placeholder="Origin, destination, cargo details, timeline"></textarea></div>' +
             '<button type="submit" class="btn btn--primary btn--lg" style="width:100%;justify-content:center">Send request</button>' +
           '</form>' +
+          '<div class="success-msg expert-success">Thank you. Your request is in. A specialist will reach out within one business day.</div>' +
         '</div>' +
       '</aside>';
     var wrap = doc.createElement('div');
