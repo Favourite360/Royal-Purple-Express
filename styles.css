@@ -493,7 +493,11 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
   .logo-mark{width:40px;height:33px}
   .logo-text b{font-size:.84rem}
   .logo-text small{font-size:.48rem;letter-spacing:.2em}
-  .menu-toggle{display:grid;position:relative;z-index:2}
+  /* The drawer lives INSIDE .site-header, so it shares the header's stacking
+     context — the logo and toggle must out-rank the drawer's z-index (99) to
+     stay visible and tappable above it, not merely out-rank the header. */
+  .menu-toggle{display:grid;position:relative;z-index:105}
+  .nav > .logo{position:relative;z-index:105}
   .site-header:not(.scrolled) .on-hero .menu-toggle{color:#fff;border-color:rgba(255,255,255,.45)}
 
   /* ---- Mobile drawer ----------------------------------------------------
@@ -504,11 +508,17 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
      toggle got clipped once the page was scrolled. Both filters must be off
      while the drawer is open, and the drawer sits BELOW the header (z-index
      99 < 100) so the close button stays visible and tappable on top of it. */
-  body.nav-open .site-header{
+  body.nav-open .site-header,
+  body.nav-open .site-header.scrolled{     /* must out-specify .site-header.scrolled */
     background:var(--ink);box-shadow:none;
     -webkit-backdrop-filter:none;backdrop-filter:none;
   }
+  /* Brand + toggle read white against the open drawer, whatever the scroll state */
   body.nav-open .menu-toggle{color:#fff;border-color:rgba(255,255,255,.45)}
+  body.nav-open .logo-mark{color:#fff}
+  body.nav-open .logo-mark text{fill:var(--ink)}
+  body.nav-open .logo-text b{color:#fff}
+  body.nav-open .logo-text small{color:#D3BCD8}
 
   .nav-links{
     position:fixed;top:0;left:0;
@@ -831,4 +841,30 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   .pillar p{grid-column:1/-1}
   .pillar .pa{grid-column:2;grid-row:1}
   .footer-grid--wide{grid-template-columns:1fr}
+}
+
+/* ---------- Mobile drawer geometry — MUST STAY LAST ----------------------
+   The desktop mega-menu is centred with `left:50% + translateX(-50%)`, and the
+   open state re-applies that transform at higher specificity
+   (`.has-mega.open .mega`) than a plain `.mega` reset. `.mega--sm/--ind` also
+   set fixed widths further down the file. Both beat the mobile rules above on
+   specificity/source-order, which is what dragged expanded submenus off to the
+   left of the drawer. Reset the geometry here, last, so nothing outranks it. */
+@media(max-width:900px){
+  .has-mega .mega,
+  .has-mega:hover .mega,
+  .has-mega:focus-within .mega,
+  .has-mega.open .mega,
+  .mega,.mega--ind,.mega--sm{
+    position:static;
+    transform:none;
+    left:auto;right:auto;top:auto;
+    width:100%;max-width:none;min-width:0;
+    grid-template-columns:1fr;
+    opacity:1;visibility:visible;
+  }
+  .has-mega .mega,
+  .has-mega:hover .mega,
+  .has-mega:focus-within .mega{display:none}
+  .has-mega.open .mega{display:block}
 }
