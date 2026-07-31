@@ -190,7 +190,7 @@
           '<p class="lead">Tell us what you are shipping and a specialist will get back to you within one business day.</p>' +
           '<form data-expert-form action="https://formsubmit.co/29fe097d612957315b51cd9de2924a47" method="POST">' +
             '<input type="hidden" name="_subject" value="Talk to an expert — royalpurpleexpress.com">' +
-            '<input type="hidden" name="_next" value="https://royalpurpleexpress.com/thanks.html">' +
+            '<input type="hidden" name="_next" value="https://royalpurpleexpress.com/thanks">' +
             '<input type="hidden" name="_captcha" value="false">' +
             '<input type="hidden" name="_template" value="table">' +
             '<div class="field"><label>Full name</label><input type="text" name="name" required placeholder="Your name"></div>' +
@@ -241,7 +241,7 @@
         tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       });
     });
-    /* Activate tab from URL hash (e.g. services.html#import) */
+    /* Activate tab from URL hash (e.g. services#import) */
     function tabFromHash() {
       var id = location.hash.replace('#', '');
       if (!id) return;
