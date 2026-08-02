@@ -244,7 +244,13 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
 .trust p{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-bottom:22px}
 .marquee{display:flex;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .marquee ul{display:flex;align-items:center;gap:56px;padding-right:56px;animation:scroll 32s linear infinite;flex:none}
-.marquee li{font-family:var(--display);font-weight:700;font-size:1.15rem;color:#b9b0c9;white-space:nowrap;letter-spacing:-.01em}
+.marquee li{font-family:var(--display);font-weight:700;font-size:1.15rem;color:#b9b0c9;white-space:nowrap;letter-spacing:-.01em;display:flex;align-items:center}
+/* Client logos come from mixed sources (white tiles, one coloured tile), so they
+   are desaturated to sit together evenly, and return to full colour on hover. */
+.marquee li img{height:38px;width:auto;display:block;filter:grayscale(1);opacity:.6;transition:filter .35s var(--ease),opacity .35s var(--ease)}
+.marquee li:hover img{filter:grayscale(0);opacity:1}
+.marquee li.mq-text{font-size:1rem;max-width:none}
+@media(max-width:560px){.marquee li img{height:30px}.marquee li.mq-text{font-size:.86rem}}
 @keyframes scroll{to{transform:translateX(-100%)}}
 
 /* ---------- Intro split ---------- */
