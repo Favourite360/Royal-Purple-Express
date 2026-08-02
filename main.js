@@ -212,7 +212,7 @@
             '<input type="hidden" name="_captcha" value="false">' +
             '<input type="hidden" name="_template" value="table">' +
             '<input type="hidden" name="_blacklist" value="seo services, backlinks, guest post, link building, casino, viagra, forex signals, crypto investment, bitcoin investment, loan offer, click here to claim, increase your traffic">' +
-            '<div class="hp-field" aria-hidden="true"><label for="x_company_url">Leave this field empty</label><input type="text" id="x_company_url" name="_honey" tabindex="-1" autocomplete="off"></div>' +
+            '<div class="hp-field" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0"><label for="x_company_url">Leave this field empty</label><input type="text" id="x_company_url" name="_honey" tabindex="-1" autocomplete="off"></div>' +
             '<div class="field"><label>Full name</label><input type="text" name="name" required placeholder="Your name"></div>' +
             '<div class="field"><label>Work email</label><input type="email" name="email" required placeholder="you@company.com"></div>' +
             '<div class="field"><label>Company</label><input type="text" name="company" placeholder="Company name"></div>' +
