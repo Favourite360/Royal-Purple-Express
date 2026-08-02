@@ -464,6 +464,10 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
 .ca-item b{display:block;color:#fff;margin-bottom:3px}
 .ca-item span{color:#b3a4cf;font-size:.92rem}
 .form-note{font-size:.82rem;color:var(--ink-soft);margin-top:6px}
+/* Honeypot. Deliberately NOT display:none — many bots skip hidden inputs but will
+   happily fill an off-screen one. Invisible to sighted users, removed from the
+   accessibility tree, and unreachable by keyboard or autofill. */
+.hp-field{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
 .success-msg{display:none;background:rgba(142,76,152,.1);border:1px solid rgba(142,76,152,.3);color:var(--royal);padding:16px 18px;border-radius:12px;margin-top:20px;font-weight:600}
 .success-msg.show{display:block}
 

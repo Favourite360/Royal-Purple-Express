@@ -138,12 +138,40 @@
   }
 
   /* Forms: AJAX submit — user stays on the page, sees inline confirmation */
+  function showSuccess(form) {
+    var msg = form.parentNode.querySelector('.success-msg');
+    if (!msg) {
+      msg = doc.createElement('div');
+      msg.className = 'success-msg';
+      // Placed right after the form (i.e. beneath the submit button) so the
+      // confirmation appears exactly where the user is already looking.
+      form.parentNode.insertBefore(msg, form.nextSibling);
+    }
+    msg.textContent = 'Thank you. Your message has been sent. A coordinator will reach out within one business day.';
+    msg.classList.add('show');
+    msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
   function wireAjaxForms() {
     doc.querySelectorAll('form[action*="formsubmit.co"]').forEach(function (form) {
       if (form.getAttribute('data-wired')) return;
       form.setAttribute('data-wired', '1');
+      form.setAttribute('data-ready-at', Date.now());
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+
+        /* Bot traps. Both fail "successfully" — a bot that is told it was blocked
+           just retries with a different payload, so show the normal confirmation
+           and quietly send nothing. FormSubmit also drops _honey server-side, so
+           this holds even if someone posts to the endpoint directly. */
+        var honey = form.querySelector('[name="_honey"]');
+        var tooFast = Date.now() - Number(form.getAttribute('data-ready-at') || 0) < 1500;
+        if ((honey && honey.value !== '') || tooFast) {
+          showSuccess(form);
+          form.reset();
+          return;
+        }
+
         var btn = form.querySelector('button[type="submit"]');
         var orig = btn ? btn.innerHTML : '';
         if (btn) { btn.disabled = true; btn.innerHTML = 'Sending\u2026'; }
@@ -155,17 +183,7 @@
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(data)
         }).then(function (r) { return r.json(); }).then(function () {
-          var msg = form.parentNode.querySelector('.success-msg');
-          if (!msg) {
-            msg = doc.createElement('div');
-            msg.className = 'success-msg';
-            // Placed right after the form (i.e. beneath the submit button) so the
-            // confirmation appears exactly where the user is already looking.
-            form.parentNode.insertBefore(msg, form.nextSibling);
-          }
-          msg.textContent = 'Thank you. Your message has been sent. A coordinator will reach out within one business day.';
-          msg.classList.add('show');
-          msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          showSuccess(form);
           form.reset();
           if (btn) { btn.disabled = false; btn.innerHTML = orig; }
         }).catch(function () {
@@ -193,6 +211,8 @@
             '<input type="hidden" name="_next" value="https://royalpurpleexpress.com/thanks">' +
             '<input type="hidden" name="_captcha" value="false">' +
             '<input type="hidden" name="_template" value="table">' +
+            '<input type="hidden" name="_blacklist" value="seo services, backlinks, guest post, link building, casino, viagra, forex signals, crypto investment, bitcoin investment, loan offer, click here to claim, increase your traffic">' +
+            '<div class="hp-field" aria-hidden="true"><label for="x_company_url">Leave this field empty</label><input type="text" id="x_company_url" name="_honey" tabindex="-1" autocomplete="off"></div>' +
             '<div class="field"><label>Full name</label><input type="text" name="name" required placeholder="Your name"></div>' +
             '<div class="field"><label>Work email</label><input type="email" name="email" required placeholder="you@company.com"></div>' +
             '<div class="field"><label>Company</label><input type="text" name="company" placeholder="Company name"></div>' +
