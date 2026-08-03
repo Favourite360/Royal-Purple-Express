@@ -205,6 +205,15 @@ body.nav-open .menu-toggle span::after{top:0;transform:rotate(-45deg)}
 .lane-rail .wp.active{opacity:1}
 .lane-rail .wp.active .dot{background:var(--violet);border-color:var(--violet);box-shadow:0 0 0 5px rgba(142,76,152,.18)}
 .lane-rail .lbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--royal);font-weight:500}
+/* The purple rail vanishes against dark surfaces (hero photography, ink bands,
+   the footer), so it flips to white whenever one of those sits behind it.
+   main.js toggles .on-dark based on what is at the rail's vertical position. */
+.lane-rail.on-dark .wp{opacity:.6}
+.lane-rail.on-dark .wp.active{opacity:1}
+.lane-rail.on-dark .wp::before{background:rgba(255,255,255,.32)}
+.lane-rail.on-dark .dot{border-color:rgba(255,255,255,.85);background:transparent}
+.lane-rail.on-dark .wp.active .dot{background:#fff;border-color:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.22)}
+.lane-rail.on-dark .lbl{color:#fff;text-shadow:0 1px 6px rgba(22,17,31,.55)}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}

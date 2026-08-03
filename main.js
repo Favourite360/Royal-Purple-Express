@@ -108,6 +108,24 @@
     sections.forEach(function (s) { wpIO.observe(s); });
   }
 
+  /* Lane rail contrast: white while a dark surface sits behind it, purple otherwise.
+     rootMargin -50%/-50% collapses the observer root to a line at the vertical
+     centre of the viewport, which is exactly where the rail is anchored. */
+  var rail = doc.querySelector('.lane-rail');
+  if (rail && 'IntersectionObserver' in window) {
+    var darkBehind = [];
+    var darkIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var i = darkBehind.indexOf(e.target);
+        if (e.isIntersecting) { if (i === -1) darkBehind.push(e.target); }
+        else if (i !== -1) { darkBehind.splice(i, 1); }
+      });
+      rail.classList.toggle('on-dark', darkBehind.length > 0);
+    }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+    doc.querySelectorAll('.hero, .ind-hero, .section--ink, .section--photo, .cta-band, .site-footer')
+       .forEach(function (el) { darkIO.observe(el); });
+  }
+
   /* Magnetic primary buttons (pointer fine only) */
   if (window.matchMedia('(pointer:fine)').matches && !window.matchMedia('(prefers-reduced-motion:reduce)').matches) {
     doc.querySelectorAll('.btn--primary').forEach(function (btn) {
